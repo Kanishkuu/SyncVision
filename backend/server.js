@@ -1,9 +1,8 @@
-// server.mjs or server.js (if "type": "module" is in package.json)
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import router from './routes/user.route.js';
+import userRoutes from './routes/user.route.js'; // Ensure correct path
 
 dotenv.config();
 
@@ -18,11 +17,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(error => console.error('MongoDB connection error:', error));
 
 // Routes
-app.use('/api/auth', router);
-
-// app.get('/', (req, res) => {
-//   res.send('SyncVision API');
-// });
+app.use('/api/auth', userRoutes); // Ensure this matches the frontend fetch path
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
