@@ -17,9 +17,12 @@
     "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.2",
     "google-auth-library": "^9.12.0",
+    "konva": "^9.3.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.25.1"
+    "react-konva": "^18.2.10",
+    "react-router-dom": "^6.25.1",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
