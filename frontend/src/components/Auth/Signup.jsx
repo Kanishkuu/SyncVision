@@ -1,33 +1,32 @@
-// src/components/Signup.js
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { AuthContext } from '../../context/AuthContext';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('');
   const navigate = useNavigate();
+  const { signup, handleGoogleSignIn } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/signup', { username, email, password });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard'); // Change to your dashboard route
-    } catch (err) {
-      console.error(err);
+      await signup({ username, email, password, gender });
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Signup error:', error.message);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post('/api/auth/google', { tokenId: credentialResponse.credential });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard'); // Change to your dashboard route
-    } catch (err) {
-      console.error(err);
+      await handleGoogleSignIn(credentialResponse.credential);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Google sign-in error:', error.message);
     }
   };
 
@@ -66,12 +65,34 @@ const Signup = () => {
               required
               className="w-full px-4 py-2 border rounded-md"
             />
+            <div className="flex items-center mb-4">
+              <label className="mr-4">
+                <input
+                  type="radio"
+                  value="male"
+                  checked={gender === 'male'}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="mr-2"
+                />
+                Male
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="female"
+                  checked={gender === 'female'}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="mr-2"
+                />
+                Female
+              </label>
+            </div>
             <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
               Sign Up
             </button>
           </form>
           <div className="mt-4">
-          <GoogleLogin
+            <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleFailure}
               useOneTap
@@ -81,7 +102,6 @@ const Signup = () => {
               shape="rectangular"
               theme="outline"
               width="383px"
-              
             />
           </div>
           <p className="mt-4 text-center">Already have an account? <a href="/login" className="text-blue-500">Login</a></p>

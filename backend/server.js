@@ -2,28 +2,34 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser'; 
 import { Server } from 'socket.io';
 import http from 'http';
-import userRoutes from './routes/user.route.js'; 
+import authRoutes from './routes/auth.route.js'; 
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+// Configure Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
+    origin: 'http://localhost:5173', 
+    methods: ['GET', 'POST'],
+    credentials: true, // Allow cookies to be sent
   },
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
 });
 
-
-const PORT = process.env.PORT || 5000;
-
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true, // Allow cookies to be sent
+}));
 app.use(express.json());
+app.use(cookieParser());
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB database connection established successfully'))
   .catch(error => console.error('MongoDB connection error:', error));
@@ -51,9 +57,9 @@ io.on('connection', (socket) => {
 }); 
 
 // Routes
-app.use('/api/auth', userRoutes); // Ensure this matches the frontend fetch path
+app.use('/api/auth', authRoutes); 
 
 // Start server
-server.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
+server.listen(process.env.PORT || 5000, () => {
+  console.log(`Server is running on port: ${process.env.PORT || 5000}`);
 });

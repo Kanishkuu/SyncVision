@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
@@ -10,8 +10,7 @@ const Whiteboard = () => {
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('black');
-  const [tool, setTool] = useState('line'); // Only 'line' tool
-  const [eraserSize, setEraserSize] = useState(10); // Eraser size state is not used
+  const [tool, setTool] = useState('line');
 
   useEffect(() => {
     socket.emit('joinRoom', roomId);

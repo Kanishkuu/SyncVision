@@ -18,7 +18,16 @@ const UserSchema = new mongoose.Schema({
     googleId: { 
         type: String 
     },
-});
+    gender: {
+        type: String,
+        required: true,
+        enum: ["male", "female"], 
+    },
+    profilePic: {
+        type: String,
+        default: "",
+    }
+}, { timestamps: true }); 
 
 const User = mongoose.model('User', UserSchema);
 export default User;

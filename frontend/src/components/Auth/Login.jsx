@@ -1,35 +1,30 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login, handleGoogleSignIn } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard'); // Change to your dashboard route
+      await login({ email, password });
+      navigate('/dashboard');
     } catch (error) {
-      console.log(error);
+      console.error('Login error:', error.message);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post('/api/auth/google', { tokenId: credentialResponse.credential });
-      localStorage.setItem('token', res.data.token);
-
-      navigate('/dashboard'); // Change to your dashboard route
-    } catch (err) {
-      console.error(err);
+      await handleGoogleSignIn(credentialResponse.credential);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Google sign-in error:', error.message);
     }
   };
 
@@ -75,7 +70,6 @@ const Login = () => {
               shape="rectangular"
               theme="outline"
               width="383px"
-              
             />
           </div>
           <p className="mt-4 text-center">Don't have an account? <a href="/signup" className="text-blue-500">Sign up</a></p>
