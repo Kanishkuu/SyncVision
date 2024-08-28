@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useContext } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Editor from './components/Editor';
 import Whiteboard from './components/Whiteboard/Whiteboard';
@@ -6,27 +7,39 @@ import TaskManager from './components/TaskManager';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import NotFound from './components/NotFound';
-import PrivateRoute from './components/PrivateRoute'; 
 import Room from './components/Whiteboard/Room';
 import ChatPage from './components/Chat/ChatPage';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
+  const { isAuthenticated, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-800 text-white text-lg font-semibold">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<NotFound />} />
-        
-        {/* Protected routes */}
-        <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
-        <Route path="/chatpage" element={<PrivateRoute element={ChatPage} />} />
-        <Route path="/editor" element={<PrivateRoute element={Editor} />} />
-        <Route path="/whiteboard" element={<PrivateRoute element={Room} />} />
-        <Route path="/whiteboard/:roomId" element={<PrivateRoute element={Whiteboard} />} />
-        <Route path="/task-manager" element={<PrivateRoute element={TaskManager} />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}/>
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />}/>
+        <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <Signup />}/>
+        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}/>
+        <Route path="/chatpage" element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}/>
+        <Route path="/editor" element={isAuthenticated ? <Editor /> : <Navigate to="/login" />}/>
+        <Route path="/whiteboard" element={isAuthenticated ? <Room /> : <Navigate to="/login" />}/>
+        <Route path="/whiteboard/:roomId" element={isAuthenticated ? <Whiteboard /> : <Navigate to="/login" />}/>
+        <Route path="/task-manager" element={isAuthenticated ? <TaskManager /> : <Navigate to="/login" />}/>
+        <Route path="*" element={<NotFound />}/>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

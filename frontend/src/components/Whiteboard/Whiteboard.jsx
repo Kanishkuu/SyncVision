@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
-import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
-
-const socket = io('http://localhost:5000');
+import { useSocket } from '../../context/SocketContext';
 
 const Whiteboard = () => {
   const { roomId } = useParams();
+  const socket = useSocket();
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [tool, setTool] = useState('line');
 
   useEffect(() => {
+    if (!socket) return;
+
     socket.emit('joinRoom', roomId);
 
     socket.on('draw', (line) => {
@@ -27,7 +28,7 @@ const Whiteboard = () => {
       socket.off('draw');
       socket.off('clear');
     };
-  }, [roomId]);
+  }, [roomId, socket]);
 
   const handleMouseDown = (e) => {
     setIsDrawing(true);
@@ -62,6 +63,10 @@ const Whiteboard = () => {
     socket.emit('clear', { roomId });
   };
 
+  const handleExit = () => {
+    navigate('/dashboard');
+  };
+
   const drawLine = (line, index) => (
     <Line
       key={index}
@@ -74,7 +79,7 @@ const Whiteboard = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen  text-gray-100">
+    <div className="flex flex-col h-screen text-gray-100">
       <div className="bg-gray-800 p-4 flex justify-between items-center shadow-md">
         <div className="flex space-x-4">
           <button
@@ -96,12 +101,20 @@ const Whiteboard = () => {
             Clear
           </button>
         </div>
-        <button
-          onClick={() => navigator.clipboard.writeText(roomId)}
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          Copy Room ID
-        </button>
+        <div className="flex space-x-4">
+          <button
+            onClick={handleExit}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Exit
+          </button>
+          <button
+            onClick={() => navigator.clipboard.writeText(roomId)}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Copy Room ID
+          </button>
+        </div>
       </div>
       <div className="flex-1 overflow-hidden">
         <Stage

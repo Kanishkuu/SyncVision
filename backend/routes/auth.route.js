@@ -12,7 +12,8 @@ router.post('/logout',logout)
 
 // Endpoint to check authentication status
 router.get('/check-auth', protectRoute, (req, res) => {
-  res.json({ authenticated: true });
+  res.json({ authenticated: true, user: req.user });
 });
+
 
 export default router;
