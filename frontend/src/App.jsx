@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Editor from './components/Editor';
-import Whiteboard from './components/Whiteboard';
+import Whiteboard from './components/Whiteboard/Whiteboard';
 import TaskManager from './components/TaskManager';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import NotFound from './components/NotFound';
 import PrivateRoute from './components/PrivateRoute'; 
-import Room from './components/Room';
-import ChatPage from './components/ChatPage';
+import Room from './components/Whiteboard/Room';
+import ChatPage from './components/Chat/ChatPage';
 
 function App() {
   return (

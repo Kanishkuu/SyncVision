@@ -9,7 +9,7 @@ const Whiteboard = () => {
   const { roomId } = useParams();
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState('black');
+  const [color, setColor] = useState('#000000');
   const [tool, setTool] = useState('line');
 
   useEffect(() => {
@@ -74,12 +74,12 @@ const Whiteboard = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="bg-gray-200 p-4 flex justify-between items-center shadow-md">
+    <div className="flex flex-col h-screen  text-gray-100">
+      <div className="bg-gray-800 p-4 flex justify-between items-center shadow-md">
         <div className="flex space-x-4">
           <button
             onClick={() => setTool('line')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Line
           </button>
@@ -91,14 +91,14 @@ const Whiteboard = () => {
           />
           <button
             onClick={handleClear}
-            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             Clear
           </button>
         </div>
         <button
           onClick={() => navigator.clipboard.writeText(roomId)}
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           Copy Room ID
         </button>

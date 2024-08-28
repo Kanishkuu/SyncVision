@@ -9,7 +9,7 @@ const Dashboard = () => {
       {/* Main content area */}
       <main className="flex-grow flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <div className="flex justify-end items-center bg-gradient-to-r from-gray-700 to-gray-900 p-4 shadow-md border-b border-gray-800">
+        <div className="flex justify-end items-center bg-gray-900 p-4 shadow-md border-b border-gray-800">
           <div className="flex items-center space-x-4">
             <Logout />
           </div>
