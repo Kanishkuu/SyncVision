@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import { useParams } from 'react-router-dom';
 import { useSocket } from '../../context/SocketContext';
+import { useNavigate } from 'react-router-dom';
 
 const Whiteboard = () => {
   const { roomId } = useParams();
@@ -10,7 +11,8 @@ const Whiteboard = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [tool, setTool] = useState('line');
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (!socket) return;
 

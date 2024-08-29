@@ -6,8 +6,8 @@
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
     export const login = async (req, res) => {
-        const { email, password } = req.body;
         try {
+            const { email, password } = req.body;
             if (!email) {
                 return res.status(400).json({ msg: 'Email is required' });
             }
@@ -31,8 +31,8 @@
     };
 
     export const signup = async (req, res) => {
-        const { username, email, password, gender } = req.body;
         try {
+            const { username, email, password, gender } = req.body;
 
             if (!username || !email || !password || !gender) {
                 return res.status(400).json({ message: 'All fields are required' });
@@ -58,12 +58,19 @@
 
             generateTokenAndSetCookie(user._id, res);
 
-            res.status(200).json({
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                profilePic: user.profilePic,
-            });
+            if (user) {
+                generateTokenAndSetCookie(newUser._id, res);
+                await user.save();
+    
+                res.status(201).json({
+                    _id: user._id,
+                    username: user.username,
+                    email : user.email,
+                    profilePic: newUser.profilePic,
+                });
+            } else {
+                res.status(400).json({ error: "Invalid user data" });
+            }
         } catch (error) {
             res.status(500).json({ msg: 'Server Error' });
         }

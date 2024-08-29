@@ -5,7 +5,6 @@ import { useState } from "react";
 const useSendMessage = () => {
     const { messages, setMessages, selectedConversation } = useConversation();
     const [ loading , setLoading] = useState(false);
-
     const sendMessage = async (message) => {
         try {
             const res = await axios.post(`/api/messages/send/${selectedConversation._id}`, 

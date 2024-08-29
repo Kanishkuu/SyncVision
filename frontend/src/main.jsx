@@ -12,13 +12,13 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 ReactDOM.createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={clientId}>
     <AuthProvider>
-      <ConversationProvider>
-        <SocketProvider>
+      <SocketProvider>
+        <ConversationProvider>
           <React.StrictMode>
             <App />
           </React.StrictMode>
-        </SocketProvider>
-      </ConversationProvider>
+        </ConversationProvider>
+      </SocketProvider>
     </AuthProvider>
   </GoogleOAuthProvider>
 );
